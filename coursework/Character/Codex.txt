@@ -1,0 +1,52 @@
+//
+//STATS
+//
+strength = 0
+dexterity = 1
+intelligence = 2
+charisma = 3
+resistance = 4
+endurance = 5
+health = 6
+armor = 7
+magical resistance = 8
+attack speed = 9
+stealth = 10
+movement speed = 11
+damage = 12
+//
+//INVENTORY
+//
+
+NULL=0
+
+Spork = 1
+Rusty Sword = 2
+Necromancer's Staff = 3
+Nostoro's Skeletal Axe = 4
+
+Wolf-Skull Mace = 5
+Wolf Pelt Armour = 6
+Ophelia's Claw Rapier = 7
+
+Bonewalker Boots = 8
+Sturdy Iron Shield = 9
+Byzular's Spiked Club = 10
+
+Dragon Scale Gloves = 11
+Dragon Tooth Club = 12
+Quelii's Elven Bow = 13
+
+Health Potion = 14
+
+Ice Hammer = 15
+Frozen Ring = 16
+Ijik's Ice Crown = 17
+
+Ollak's Ring = 18
+Azzak's Demon Staff = 19
+Demon Lord Armor = 20
+
+Thief's Ring = 21
+Irrlian Staff = 22
+Olko's Twin Daggers = 23

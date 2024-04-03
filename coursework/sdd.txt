@@ -1,0 +1,3 @@
+i was tasked with creating interactions between the player and other elements of our program. the main functionality of the newFight() class is for the hero to be able to progress through the world by taking down or fleeing from enemies. the newFight() class will take all of the necessary functions of the fight and have them available to the player and enemy.
+
+i also worked on objects which the player can interact with throughout the world. these are Chests(), Shrines() and Fountains(). these all belong to the super class of InteractableObjects() which contains the main functionality for the interaction between them and the player.  
