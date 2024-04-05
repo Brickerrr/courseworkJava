@@ -1,28 +1,20 @@
 import java.util.Scanner;
 
-import Game_Play.*;
-import Regular_Enemies.*;
+import Bosses.*;
+import Game_Play.Hero;
 
-public class RegularFight extends Fight {
-    private Monster enemy;
+public class BramzarkFight extends Fight{
+    private Bramzark enemy;
+    private boolean abilityUsed;
 
-    public RegularFight(Hero thePlayer, Monster anEnemy) {
+    public BramzarkFight(Hero thePlayer) {
         super(thePlayer);
         
-        //int random = (int)((Math.random()*5));
-        /*switch(random) {
-            case 0 : enemy = new Dragon();break;
-            case 1 : enemy = new IceGolem();break;
-            case 2 : enemy = new Orc(); break;
-            case 3 : enemy = new Skeleton(); break;
-            case 4 : enemy = new Werewolf(); break;
-            default : enemy = new Orc();break;
-        } */
-        enemy = anEnemy;
+        enemy = new Bramzark();
+        abilityUsed = false;
         setEnemyHP(enemy.getHP());
         setPlayerFirst(firstMove());
 
-        enemy.creatureForm();
         System.out.println(enemy.encounterMessage());
 
         if (getPlayerFirst()) {
@@ -31,15 +23,26 @@ public class RegularFight extends Fight {
             enemyTurn();
         }
     }
-
-    public Monster getEnemy(){
+    
+    public Bramzark getEnemy() {
         return enemy;
+    }
+
+    public boolean getAbilityStatus() {
+        return abilityUsed;
+    }
+
+    public void setAbilityStatus(boolean status) {
+        abilityUsed = status;
     }
 
     @Override
     public void enemyTurn() {
-
-        System.out.println("The enemy approaches...\n");
+        if (getEnemyHP() < (enemy.getHP()/100)*25 && getAbilityStatus() == false) {
+            setAbilityStatus(true);
+            setEnemyHP(getEnemyHP() + enemy.specialBerserkerRage());
+        }
+        System.out.println(enemy.getName()  + " approaches...\n");
         double damage = enemy.attack();
         System.out.println("the enemy dealt " + damage + " damage");
         damage = (int)(damage)-(int)((getHero().getStat(7) + getHero().getStat(8))*0.15);

@@ -1,42 +1,50 @@
-import java.util.Scanner;
+import Game_Play.*;
+import Regular_Enemies.*;
+import java.util.*;
+import Character.*;
 
-import Game_Play.Hero;
-import Game_Play.Weapon;
-
-public abstract class Fight {
+public class NewFight {
     private Hero player;
+    private Monster enemy;
     private int turn;
     private boolean keepGoing;
     private double playerHP;
     private double enemyHP;
     private boolean playerFirst;
 
-    public Fight(Hero thePlayer) {
-        player = thePlayer;
+    public NewFight(Hero aHero) {
+        player = aHero;
+        int random = (int)((Math.random()*5));
+        switch(random) {
+            case 0 : enemy = new Dragon();break;
+            case 1 : enemy = new IceGolem();break;
+            case 2 : enemy = new Orc(); break;
+            case 3 : enemy = new Skeleton(); break;
+            case 4 : enemy = new Werewolf(); break;
+            default : enemy = new Orc();break;
+        }
         turn = 1;
         keepGoing = true;
-        //playerHP = player.getStat(6);
-        playerHP = 9999;
+        playerHP = player.getStat(6);
+        enemyHP = enemy.getHP();
+        playerFirst = firstMove();
+        //
+        enemy.creatureForm();
+        System.out.println(enemy.encounterMessage());
+
+        if (playerFirst) {
+            playerTurn();
+        } else {
+            enemyTurn();
+        }
+    }
+    //
+    public Monster getEnemy() {
+        return enemy;
     }
 
     public Hero getHero() {
         return player;
-    }
-
-    public boolean getPlayerFirst() {
-        return playerFirst;
-    }
-
-    public void setPlayerFirst(boolean check) {
-        playerFirst = check;
-    }
-
-    public void damagePlayer(double number) {
-        playerHP = playerHP - number;
-    }
-
-    public void setEnemyHP(double HP) {
-        enemyHP = HP;
     }
 
     public void playerTurn(){ 
@@ -49,9 +57,9 @@ public abstract class Fight {
             choice =choose.nextInt();
 
             switch(choice) {
-                case 1: System.out.println("Fight Selected\n"); check= true;fightOption(); break;
-                case 2: System.out.println("Inventory Selected\n"); check=true;inventoryOption(); break;
-                case 3: System.out.println("Run Selected\n"); check=true;runOption(); break;
+                case 1: System.out.println("Fight Selected"); check= true;fightOption(); break;
+                case 2: System.out.println("Inventory Selected"); check=true;inventoryOption(); break;
+                case 3: System.out.println("Run Selected"); check=true;runOption(); break;
                 default: System.out.println("please input a valid option (1,2,3)");
             }
         }
@@ -69,22 +77,20 @@ public abstract class Fight {
         }
 
         switch(bestStat) {
-            case 0: System.out.println("You use your muscle to attack the enemy\n");break;
-            case 1: System.out.println("You use your skill and agility to attack the enemy\n");break;
-            case 2: System.out.println("You use a magical attack on the enemy\n");break;
+            case 0: System.out.println("You use your muscle to attack the enemy");break;
+            case 1: System.out.println("You use your skill and agility to attack the enemy");break;
+            case 2: System.out.println("You use a magical attack on the enemy");break;
         }
 
         double d20Roll = (int)((Math.random()*20)+1);
         damage = (int) (player.getStat(bestStat)/2) + (int)((Math.random()*6)+4) + (int) (d20Roll/3);
         
         if(d20Roll == 20 ) {
-            System.out.println("You rolled, " + d20Roll + ". Critcal Hit!");
+            System.out.println("Critcal Hit!");
             damage = damage * 2;
-        } else {
-            System.out.println("You rolled, " + d20Roll + "");
         }
 
-        System.out.println("You dealt " + damage + " damage to the enemy!\n");
+        System.out.println("You dealt " + damage + " damage to the enemy!");
 
         enemyHP = getEnemyHP() - damage;
 
@@ -98,6 +104,7 @@ public abstract class Fight {
             enemyTurn();
             
         }
+        
         
     }
 
@@ -152,7 +159,31 @@ public abstract class Fight {
         return keepGoing;
     }
 
-    public abstract void enemyTurn();
+    public void enemyTurn() {
+
+        System.out.println("The enemy approaches...\n");
+        double damage = enemy.attack();
+        System.out.println("the enemy dealt " + damage + " damage");
+        damage = (int)(damage)-(int)((player.getStat(7) + player.getStat(8))*0.15);
+
+        //stops hp being added to player when attacked if enemies' attack is too weak
+        if(damage <0) {
+            damage = 0;
+        }
+
+        System.out.println( "Damage reduced to " + damage);
+
+        playerHP = getPlayerHP() - damage;
+
+        if (getPlayerHP() <=0) {
+            playerLoss();
+        } else {
+            if(playerFirst == true) {
+                incrementTurn();
+            }
+            playerTurn();
+        }
+    }
 
     public void playerLoss() {
         stopFight();
@@ -160,8 +191,22 @@ public abstract class Fight {
         /*end game */
     }
 
-    public abstract void playerWin();
+    public void playerWin() {
+        stopFight();
+        System.out.println("The enemy was defeated! \n");
+        Scanner drop = new Scanner(System.in);
+        System.out.println(getEnemy().death());
 
-    public abstract boolean firstMove();
+        int index = drop.nextInt();
+        player.modifyInventory(index);
+         
+    }
+
+    public boolean firstMove() {
+        if (player.getStat(11) >= enemy.getSpeed()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
-

@@ -1,28 +1,18 @@
 import java.util.Scanner;
 
-import Game_Play.*;
-import Regular_Enemies.*;
+import Bosses.*;
+import Game_Play.Hero;
 
-public class RegularFight extends Fight {
-    private Monster enemy;
+public class UnknownFight extends Fight{
+    private TheUnknown enemy;
 
-    public RegularFight(Hero thePlayer, Monster anEnemy) {
+    public UnknownFight(Hero thePlayer) {
         super(thePlayer);
         
-        //int random = (int)((Math.random()*5));
-        /*switch(random) {
-            case 0 : enemy = new Dragon();break;
-            case 1 : enemy = new IceGolem();break;
-            case 2 : enemy = new Orc(); break;
-            case 3 : enemy = new Skeleton(); break;
-            case 4 : enemy = new Werewolf(); break;
-            default : enemy = new Orc();break;
-        } */
-        enemy = anEnemy;
+        enemy = new TheUnknown();
         setEnemyHP(enemy.getHP());
         setPlayerFirst(firstMove());
 
-        enemy.creatureForm();
         System.out.println(enemy.encounterMessage());
 
         if (getPlayerFirst()) {
@@ -31,16 +21,18 @@ public class RegularFight extends Fight {
             enemyTurn();
         }
     }
-
-    public Monster getEnemy(){
+    
+    public TheUnknown getEnemy() {
         return enemy;
     }
 
     @Override
     public void enemyTurn() {
+        setEnemyHP(getEnemyHP() + enemy.specialHealthRegen());
+        System.out.println(enemy.getName()  + " approaches...\n");
 
-        System.out.println("The enemy approaches...\n");
-        double damage = enemy.attack();
+
+        double damage = enemy.specialDoubleAttack();
         System.out.println("the enemy dealt " + damage + " damage");
         damage = (int)(damage)-(int)((getHero().getStat(7) + getHero().getStat(8))*0.15);
 
